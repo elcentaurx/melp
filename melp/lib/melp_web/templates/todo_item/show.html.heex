@@ -1,0 +1,58 @@
+<h1>Show Todo item</h1>
+
+<ul>
+
+  <li>
+    <strong>Rating:</strong>
+    <%= @todo_item.rating %>
+  </li>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @todo_item.name %>
+  </li>
+
+  <li>
+    <strong>Site:</strong>
+    <%= @todo_item.site %>
+  </li>
+
+  <li>
+    <strong>Email:</strong>
+    <%= @todo_item.email %>
+  </li>
+
+  <li>
+    <strong>Phone:</strong>
+    <%= @todo_item.phone %>
+  </li>
+
+  <li>
+    <strong>Street:</strong>
+    <%= @todo_item.street %>
+  </li>
+
+  <li>
+    <strong>City:</strong>
+    <%= @todo_item.city %>
+  </li>
+
+  <li>
+    <strong>State:</strong>
+    <%= @todo_item.state %>
+  </li>
+
+  <li>
+    <strong>Lat:</strong>
+    <%= @todo_item.lat %>
+  </li>
+
+  <li>
+    <strong>Lng:</strong>
+    <%= @todo_item.lng %>
+  </li>
+
+</ul>
+
+<span><%= link "Edit", to: Routes.todo_item_path(@conn, :edit, @todo_item) %></span> |
+<span><%= link "Back", to: Routes.todo_item_path(@conn, :index) %></span>

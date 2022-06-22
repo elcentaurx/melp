@@ -1,0 +1,44 @@
+<h1>Listing Todo items</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Rating</th>
+      <th>Name</th>
+      <th>Site</th>
+      <th>Email</th>
+      <th>Phone</th>
+      <th>Street</th>
+      <th>City</th>
+      <th>State</th>
+      <th>Lat</th>
+      <th>Lng</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for todo_item <- @todo_items do %>
+    <tr>
+      <td><%= todo_item.rating %></td>
+      <td><%= todo_item.name %></td>
+      <td><%= todo_item.site %></td>
+      <td><%= todo_item.email %></td>
+      <td><%= todo_item.phone %></td>
+      <td><%= todo_item.street %></td>
+      <td><%= todo_item.city %></td>
+      <td><%= todo_item.state %></td>
+      <td><%= todo_item.lat %></td>
+      <td><%= todo_item.lng %></td>
+
+      <td>
+        <span><%= link "Show", to: Routes.todo_item_path(@conn, :show, todo_item) %></span>
+        <span><%= link "Edit", to: Routes.todo_item_path(@conn, :edit, todo_item) %></span>
+        <span><%= link "Delete", to: Routes.todo_item_path(@conn, :delete, todo_item), method: :delete, data: [confirm: "Are you sure?"] %></span>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<span><%= link "New Restaurant", to: Routes.todo_item_path(@conn, :new) %></span>
