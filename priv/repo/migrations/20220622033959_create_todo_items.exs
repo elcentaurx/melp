@@ -2,6 +2,8 @@ defmodule Melp.Repo.Migrations.CreateTodoItems do
   use Ecto.Migration
 
   def change do
+    execute "CREATE EXTENSION IF NOT EXISTS postgis"
+
     create table(:todo_items) do
       add :rating, :integer
       add :name, :string
@@ -14,6 +16,7 @@ defmodule Melp.Repo.Migrations.CreateTodoItems do
       add :lat, :float
       add :lng, :float
       add :coordinates, :geometry
+
 
       timestamps()
     end
