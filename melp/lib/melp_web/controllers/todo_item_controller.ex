@@ -48,7 +48,7 @@ defmodule MelpWeb.TodoItemController do
 
   def update_by_email(conn, %{"email" => email, "todo_item" => todo_item_params} ) do
     todo_email = Todo.get_email(email)
-    case Todo.update_by_email(todo_email, todo_item_params) do
+    case Todo.update_todo_item(todo_email, todo_item_params) do
       {:ok, _todo_item} ->
      render_json(conn, :ok, %{"message" => "Restaurant updated successfully."})
 
@@ -64,7 +64,7 @@ defmodule MelpWeb.TodoItemController do
 
       todo_item
       |> case do
-        nil -> render_json(conn, :ok, %{"message" => "id not found"})
+        nil -> render_json(conn, :ok, %{"message" => "restaurant not found"})
         _ ->
           Todo.delete_todo_item(todo_item)
           render_json(conn, :ok, %{"message" => "Restaurant deleted successfully."})
@@ -78,7 +78,7 @@ defmodule MelpWeb.TodoItemController do
 
       todo_item
       |> case do
-        nil -> render_json(conn, :ok, %{"message" => "id not found"})
+        nil -> render_json(conn, :ok, %{"message" => "restaurant not found"})
         _ ->
           Todo.delete_todo_item(todo_item)
           render_json(conn, :ok, %{"message" => "Restaurant deleted successfully."})

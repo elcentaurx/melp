@@ -37,6 +37,19 @@ defmodule Melp.Todo do
   """
   def get_todo_item(id), do: Repo.get(TodoItem, id)
 
+    @doc """
+  Gets a list with avg, count, deviation.
+
+  Raises `Ecto.NoResultsError` if the Todo item does not exist.
+
+  ## Examples
+
+      iex> get_todo_item(lat, lng, radius)
+      %{avg: _, count: _, radius: _}
+
+
+  """
+
   def get_restaurants(lat, lng, radius) do
     geo = %Geo.Point{coordinates: {lat |> String.to_float, lng |> String.to_float}, srid: nil}
     radius = radius |> String.to_float
@@ -66,17 +79,77 @@ defmodule Melp.Todo do
 
   end
 
+  @doc """
+  Gets a single restaurant.
+
+  Raises `Ecto.NoResultsError` if the Todo item does not exist.
+
+  ## Examples
+
+      iex> get_point(id)
+      %TodoItem{}
+
+      iex> get_point(id)
+      nil
+
+  """
+
   def get_point(id) do
     id |> RestaurantLocateQuery.get_point |> Repo.all
   end
+
+
+  @doc """
+  Gets a List with values when geometry in a range.
+
+  Raises `Ecto.NoResultsError` if the Todo item does not exist.
+
+  ## Examples
+
+      iex> get_coordinate(id, point, geo, radious)
+      List
+
+      iex> get_coordinate(id, point, geo, radious)
+      []
+
+  """
 
   def get_coordinate(id, point, geo, radius) do
     RestaurantLocateQuery.get_restaurants(id, point, geo, radius) |> Repo.all
   end
 
+
+  @doc """
+  Gets a filter list.
+
+
+  ## Examples
+
+      iex> filter_restaurants(list)
+      List
+
+      iex> get_coordinate(list)
+      []
+
+  """
+
   def filter_restaurants(params) do
     (params |> Enum.filter(fn f -> f.status == [true] end))
   end
+
+
+  @doc """
+  Gets a sum of rating of the restaurants in the list.
+
+
+  ## Examples
+
+      iex> avg_restaurants(filter_list)
+      10.0
+
+      iex> avg_restaurants(filter_list)
+      9.0
+  """
 
   def avg_restaurants(filter_list) do
 
@@ -90,6 +163,20 @@ defmodule Melp.Todo do
     end
 
   end
+
+
+  @doc """
+  Gets a deviation.
+
+
+  ## Examples
+
+      iex> deviation(avg, filter_list)
+      10.0
+
+      iex> deviation(filter_list)
+      9.0
+  """
 
   def deviation(avg, filter_list) do
     len = filter_list |> length
@@ -105,6 +192,19 @@ defmodule Melp.Todo do
     end
 
   end
+
+   @doc """
+  Gets a float number when the number is integer or string.
+
+
+  ## Examples
+
+      iex> string_float(10)
+      10.0
+
+      iex> string_float("9")
+      9.0
+  """
 
   def string_float(integer) do
     float = integer |> Integer.to_string()
@@ -138,17 +238,26 @@ defmodule Melp.Todo do
     |> Repo.insert()
   end
 
+    @doc """
+  Gets a single todo_item by email.
+
+  Raises `Ecto.NoResultsError` if the Todo item does not exist.
+
+  ## Examples
+
+      iex> get_email(email)
+      %TodoItem{}
+
+      iex> get_email(email)
+      nil
+
+  """
+
 
   def get_email(email) do
     email
     |> RestaurantLocateQuery.get_by_email()
     |> Repo.one
-  end
-
-  def update_by_email(%TodoItem{} = todo_item, attrs) do
-    todo_item
-    |> TodoItem.changeset(attrs)
-    |> Repo.update()
   end
 
 
