@@ -13,7 +13,9 @@ config :melp, Melp.Repo,
   url: "${DATABASE_URL}",
   database: "", # Works around a bug in older versions of ecto. Doesn't hurt for other versions.
   ssl: true,
-  pool_size: 2 # Free tier
+  pool_size: 2, # Free tier
+  adapter: Ecto.Adapters.Postgres,
+  types: Melp.PostgresTypes
 
 # Do not print debug messages in production
 config :logger, level: :info
