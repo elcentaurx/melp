@@ -50,7 +50,8 @@ defmodule Melp.MixProject do
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
       {:poison, "~> 4.0"},
-      {:geo_postgis, "~> 3.4"}
+      {:geo_postgis, "~> 3.4"},
+      {:distillery, "~> 2.1"}
     ]
   end
 
