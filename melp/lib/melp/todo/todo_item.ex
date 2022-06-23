@@ -26,5 +26,20 @@ defmodule Melp.Todo.TodoItem do
     todo_item
     |> cast(attrs, [:rating, :name, :site, :email, :phone, :street, :city, :state, :lat, :lng, :coordinates])
     |> validate_required([:name, :lat, :lng])
+    |> validate_rating()
+    |> validate_email()
   end
+
+  defp validate_email(changeset) do
+    changeset
+    |> validate_format(:email, ~r/^[^\s]+@[^\s]+$/,
+    message: "must have the @sign and no spaces")
+  end
+
+  defp validate_rating(changeset) do
+     changeset
+     |> validate_number(:rating, [greater_than_or_equal_to: 0, less_than_or_equal_to: 4])
+  end
+
+
 end

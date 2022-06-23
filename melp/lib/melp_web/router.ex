@@ -22,6 +22,10 @@ defmodule MelpWeb.Router do
     resources "/todo_items", TodoItemController
   end
 
+  scope "/restaurants", MelpWeb do
+    pipe_through :api
+    get "/statistics", TodoItemController, :statistics
+  end
   # Other scopes may use custom stacks.
   scope "/api", MelpWeb do
     pipe_through :api
@@ -30,6 +34,8 @@ defmodule MelpWeb.Router do
     post "/create", TodoItemController, :create
     put "/update", TodoItemController, :update
     delete "/delete", TodoItemController, :delete
+    put "/update_by_email", TodoItemController, :update_by_email
+    delete "/delete_by_email", TodoItemController, :delete_by_email
 
   end
 

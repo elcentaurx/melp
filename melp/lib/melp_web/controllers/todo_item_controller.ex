@@ -15,64 +15,79 @@ defmodule MelpWeb.TodoItemController do
   end
 
   def create(conn, %{"todo_item" => todo_item_params}) do
-    #  todo_item_params |> Poison.decode!()
-    todo_item_params |> IO.inspect(label: "=================>")
-    # aux["todo_item"] |>
+    todo_item_params
     case Todo.create_todo_item(todo_item_params) do
       {:ok, _todo_item} ->
-        #conn
-        # |> put_flash(:info, "Restaurant created successfully.")
-        # |> redirect(to: Routes.todo_item_path(conn, :show, todo_item))
-
         json put_status(conn, :ok), %{"message" => "Restaurant created successfully"}
-
-      {:error, _} -> #%Ecto.Changeset{} = changeset
-
-        json put_status(conn, 401), %{"errors" => "Error al procesar la información"}
-
-        # render(conn, "new.html", changeset: changeset)
-
-
+      {:error,  %Ecto.Changeset{} = changeset} ->
+        json put_status(conn, :ok), %{"errors" => "#{inspect(changeset.errors)}"}
       end
   end
 
   def show(conn, %{"id" => id}) do
-    todo_item = Todo.get_todo_item!(id)
+    todo_item = Todo.get_todo_item(id)
     render(conn, "show.html", todo_item: todo_item)
   end
 
   def edit(conn, %{"id" => id}) do
-    todo_item = Todo.get_todo_item!(id)
-
+    todo_item = Todo.get_todo_item(id)
     changeset = Todo.change_todo_item(todo_item)
     render(conn, "edit.html", todo_item: todo_item, changeset: changeset)
   end
 
   def update(conn, %{"id" => id, "todo_item" => todo_item_params}) do
-    todo_item = Todo.get_todo_item!(id)
-
-
+    todo_item = Todo.get_todo_item(id)
     case Todo.update_todo_item(todo_item, todo_item_params) do
        {:ok, _todo_item} ->
-      #   conn
-      #   |> put_flash(:info, "Restaurant updated successfully.")
-      #   |> redirect(to: Routes.todo_item_path(conn, :show, todo_item))
       render_json(conn, :ok, %{"message" => "Restaurant updated successfully."})
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        render_json(conn, :ok, %{"errors" => "#{changeset.data.__struct__.__schema__(:source)}" })
-
+        render_json(conn, :ok, %{"errors" => "#{inspect(changeset.errors)}" })
     end
   end
 
-  def delete(conn, %{"id" => id}) do
-    todo_item = Todo.get_todo_item!(id)
-    {:ok, _todo_item} = Todo.delete_todo_item(todo_item)
-    render_json(conn, :ok, %{"message" => "Restaurant deleted successfully."})
-    # conn
-    # |> put_flash(:info, "Restaurant deleted successfully.")
-    # |> redirect(to: Routes.todo_item_path(conn, :index))
+  def update_by_email(conn, %{"email" => email, "todo_item" => todo_item_params} ) do
+    todo_email = Todo.get_email(email)
+    case Todo.update_by_email(todo_email, todo_item_params) do
+      {:ok, _todo_item} ->
+     render_json(conn, :ok, %{"message" => "Restaurant updated successfully."})
 
+     {:error, %Ecto.Changeset{} = changeset} ->
+       render_json(conn, :ok, %{"errors" => "#{inspect(changeset.errors)}" })
+   end
+
+  end
+
+  def delete_by_email(conn, %{"email" => email}) do
+    todo_item =
+      Todo.get_email(email)
+
+      todo_item
+      |> case do
+        nil -> render_json(conn, :ok, %{"message" => "id not found"})
+        _ ->
+          Todo.delete_todo_item(todo_item)
+          render_json(conn, :ok, %{"message" => "Restaurant deleted successfully."})
+      end
+
+  end
+
+  def delete(conn, %{"id" => id}) do
+    todo_item =
+      Todo.get_todo_item(id)
+
+      todo_item
+      |> case do
+        nil -> render_json(conn, :ok, %{"message" => "id not found"})
+        _ ->
+          Todo.delete_todo_item(todo_item)
+          render_json(conn, :ok, %{"message" => "Restaurant deleted successfully."})
+      end
+  end
+
+  def statistics(conn, %{"latitude" => latitude, "longitude" => longitude, "radius" => radius}) do
+    data = Todo.get_restaurants(latitude, longitude, radius)
+    render_json(conn, :ok, %{"message" => data})
   end
 
   defp render_json(conn, status, response) do
