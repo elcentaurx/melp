@@ -1,6 +1,6 @@
 use Mix.Config
 
-config :Melp, MelpWeb.Endpoint,
+config :melp, MelpWeb.Endpoint,
   load_from_system_env: true,
   http: [port: {:system, "PORT"}],
   server: true,
@@ -8,7 +8,7 @@ config :Melp, MelpWeb.Endpoint,
   url: [host: "${APP_NAME}.gigalixirapp.com", port: 443],
   cache_static_manifest: "priv/static/cache_manifest.json"
 
-config :Melp, Melp.Repo,
+config :melp, Melp.Repo,
   adapter: Ecto.Adapters.Postgres,
   url: "${DATABASE_URL}",
   database: "", # Works around a bug in older versions of ecto. Doesn't hurt for other versions.
