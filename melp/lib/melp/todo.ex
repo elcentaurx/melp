@@ -5,7 +5,7 @@ defmodule Melp.Todo do
 
   import Ecto.Query, warn: false
   alias Melp.Repo
-
+  alias Melp.RestaurantLocateQuery
   alias Melp.Todo.TodoItem
 
   @doc """
@@ -37,6 +37,34 @@ defmodule Melp.Todo do
   """
   def get_todo_item!(id), do: Repo.get!(TodoItem, id)
 
+  def get_restaurants(lat, lng, radius) do
+    geo = %Geo.Point{coordinates: {lat, lng}, srid: nil}
+    TodoItem
+    |> Repo.all
+    |> Enum.map(fn f ->  f |> Map.put(:status, f |> get_coordinate(geo, radius))  end)
+    |> IO.inspect(label: "HERE=========================>")
+
+  end
+
+  def get_coordinate(param, geo, radius) do
+    RestaurantLocateQuery.get_restaurants(param.id, geo, radius) |> Repo.one
+  end
+
+  def filter_restaurants(params) do
+    (params |> Enum.filter(fn f -> f.status end))
+    |> length()
+  end
+
+  def avg_restaurants(filter_list, len) do
+    sum = filter_list |> Enum.map(fn f -> f.rating end)
+    |> Enum.sum()
+    sum/len
+  end
+
+
+
+
+
   @doc """
   Creates a todo_item.
 
@@ -49,7 +77,8 @@ defmodule Melp.Todo do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_todo_item(attrs \\ %{}) do
+  def create_todo_item(attrs ) do
+    attrs = attrs |> Map.put("coordinates", %Geo.Point{coordinates: {attrs["lat"], attrs["lng"]}, properties: %{}, srid: nil} )
     %TodoItem{}
     |> TodoItem.changeset(attrs)
     |> Repo.insert()

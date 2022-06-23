@@ -13,6 +13,7 @@ defmodule Melp.Repo.Migrations.CreateTodoItems do
       add :state, :string
       add :lat, :float
       add :lng, :float
+      add :coordinates, :geometry
 
       timestamps()
     end

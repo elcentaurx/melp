@@ -10,6 +10,8 @@ import Config
 config :melp,
   ecto_repos: [Melp.Repo]
 
+config :melp, Melp.Repo,
+  migration_primary_key: [type: :uuid]
 # Configures the endpoint
 config :melp, MelpWeb.Endpoint,
   url: [host: "localhost"],
